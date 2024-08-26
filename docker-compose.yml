@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  framework:
+    build:
+      context: ./framework
+    image: local-framework-image
+    ports:
+      - "8000:5000"
+    depends_on:
+      - llm
+
+  llm:
+    build:
+      context: ./llm
+    image: local-llm-image
+    ports:
+      - "5000:5000"
