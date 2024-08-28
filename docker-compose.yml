@@ -1,5 +1,5 @@
-version: '3.8'
 
+version: '3'
 services:
   framework:
     build:
@@ -8,11 +8,35 @@ services:
     ports:
       - "8000:5000"
     depends_on:
-      - llm
+      
+      
+      - llm_0
+      
+      - llm_1
+      
+      - llm_2
+      
+      
 
-  llm:
+  
+  llm_0:
     build:
       context: ./llm
-    image: local-llm-image
+    image: local-llm-image_0
     ports:
-      - "5000:5000"
+      - "5002:5000"
+  
+  llm_1:
+    build:
+      context: ./llm
+    image: local-llm-image_1
+    ports:
+      - "5003:5000"
+  
+  llm_2:
+    build:
+      context: ./llm
+    image: local-llm-image_2
+    ports:
+      - "5004:5000"
+  

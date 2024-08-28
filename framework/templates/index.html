@@ -3,32 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Interface</title>
+    <title>LLM Query</title>
 </head>
 <body>
-    <h1>Ask the LLM</h1>
-    <form id="question-form">
-        <input type="text" id="question" placeholder="Ask a question..." required>
-        <button type="submit">Submit</button>
-    </form>
+    <h1>Query LLM</h1>
+    <label for="question">Enter your question:</label>
+    <input type="text" id="question" name="question"><br><br>
+
+    <label for="llm-select">Select LLM instance:</label>
+    <select id="llm-select" name="llm-select">
+        {% for i in range(llm_count) %}
+        <option value="{{ i }}">LLM {{ i }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button onclick="askQuestion()">Ask</button>
+
     <h2>Response:</h2>
-    <p id="response"></p>
+    <pre id="response"></pre>
 
     <script>
-        document.getElementById('question-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const question = document.getElementById('question').value;
+        function askQuestion() {
+            const question = document.getElementById("question").value;
+            const llmIndex = document.getElementById("llm-select").value;
 
-            const response = await fetch('/ask', {
+            fetch('/ask', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ question: question }),
+                body: JSON.stringify({ question: question, llm_index: llmIndex })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = "Error: " + error;
             });
-            const result = await response.json();
-            document.getElementById('response').innerText = result.response || 'No response';
-        });
+        }
     </script>
 </body>
 </html>
